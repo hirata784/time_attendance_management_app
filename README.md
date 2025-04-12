@@ -77,3 +77,6 @@ DB_PASSWORD=root
 - PHP 7.4.9
 - Laravel 8.83.29
 - MySQL 8.0.26
+
+## ER図
+![画像](https://coachtech-lms-bucket.s3.ap-northeast-1.amazonaws.com/question/20250412153231_time_attendance_management_app.png)
