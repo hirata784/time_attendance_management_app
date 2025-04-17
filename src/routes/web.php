@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,4 +14,9 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/attendance', [AuthController::class, 'index']);
+Route::middleware('auth')->group(function () {
+    Route::get('/attendance', [AttendanceController::class, 'create']);
+    Route::post('/attendance/work_start', [AttendanceController::class, 'store']);
+    Route::post('/attendance/work_finish', [AttendanceController::class, 'store2']);
+    Route::post('/attendance/rest_finish', [AttendanceController::class, 'store3']);
+});
