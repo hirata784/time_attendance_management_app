@@ -25,15 +25,40 @@
                 </div>
                 <nav class="sm">
                     <ul class="nav-items">
-                        @if (Auth::check())
+                        <!-- 登録画面:退勤画面のヘッダー -->
+                        @if(Request::is('attendance'))
+                        @if($work_status == 4)
+                        <li class="nav-item">
+                            <form action="/attendance/list" method="get">
+                                @csrf
+                                <button class="nav-btn">今月の出勤一覧</button>
+                            </form>
+                        </li>
                         <li class="nav-item">
                             <form action="">
+                                @csrf
+                                <button class="nav-btn">申請一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button class="nav-btn">ログアウト</button>
+                            </form>
+                        </li>
+                        @endif
+                        @endif
+                        <!-- 登録画面:退勤画面以外のヘッダー -->
+                        @if(Request::is('attendance'))
+                        @if($work_status != 4)
+                        <li class="nav-item">
+                            <form action="/attendance" method="get">
                                 @csrf
                                 <button class="nav-btn">勤怠</button>
                             </form>
                         </li>
                         <li class="nav-item">
-                            <form action="">
+                            <form action="/attendance/list" method="get">
                                 @csrf
                                 <button class="nav-btn">勤怠一覧</button>
                             </form>
@@ -51,19 +76,18 @@
                             </form>
                         </li>
                         @endif
-                    </ul>
-                </nav>
-                <nav class="pc">
-                    <ul class="nav-items">
+                        @endif
+                        <!-- 登録画面以外(要ログイン)のヘッダー -->
                         @if (Auth::check())
+                        @if(!(Request::is('attendance')))
                         <li class="nav-item">
-                            <form action="">
+                            <form action="/attendance" method="get">
                                 @csrf
                                 <button class="nav-btn">勤怠</button>
                             </form>
                         </li>
                         <li class="nav-item">
-                            <form action="">
+                            <form action="/attendance/list" method="get">
                                 @csrf
                                 <button class="nav-btn">勤怠一覧</button>
                             </form>
@@ -80,6 +104,93 @@
                                 <button class="nav-btn">ログアウト</button>
                             </form>
                         </li>
+                        @endif
+                        @endif
+                    </ul>
+                </nav>
+
+                <nav class="pc">
+                    <ul class="nav-items">
+                        <!-- 登録画面:退勤画面のヘッダー -->
+                        @if(Request::is('attendance'))
+                        @if($work_status == 4)
+                        <li class="nav-item">
+                            <form action="/attendance/list" method="get">
+                                @csrf
+                                <button class="nav-btn">今月の出勤一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="">
+                                @csrf
+                                <button class="nav-btn">申請一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button class="nav-btn">ログアウト</button>
+                            </form>
+                        </li>
+                        @endif
+                        @endif
+                        <!-- 登録画面:退勤画面以外のヘッダー -->
+                        @if(Request::is('attendance'))
+                        @if($work_status != 4)
+                        <li class="nav-item">
+                            <form action="/attendance" method="get">
+                                @csrf
+                                <button class="nav-btn">勤怠</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/attendance/list" method="get">
+                                @csrf
+                                <button class="nav-btn">勤怠一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="">
+                                @csrf
+                                <button class="nav-btn">申請</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button class="nav-btn">ログアウト</button>
+                            </form>
+                        </li>
+                        @endif
+                        @endif
+                        <!-- 登録画面以外(要ログイン)のヘッダー -->
+                        @if (Auth::check())
+                        @if(!(Request::is('attendance')))
+                        <li class="nav-item">
+                            <form action="/attendance" method="get">
+                                @csrf
+                                <button class="nav-btn">勤怠</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/attendance/list" method="get">
+                                @csrf
+                                <button class="nav-btn">勤怠一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="">
+                                @csrf
+                                <button class="nav-btn">申請</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button class="nav-btn">ログアウト</button>
+                            </form>
+                        </li>
+                        @endif
                         @endif
                     </ul>
                 </nav>

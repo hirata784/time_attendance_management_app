@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ListController;
+use App\Http\Controllers\DetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +17,11 @@ use App\Http\Controllers\AttendanceController;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/attendance', [AttendanceController::class, 'create']);
-    Route::post('/attendance/work_start', [AttendanceController::class, 'store']);
-    Route::post('/attendance/work_finish', [AttendanceController::class, 'store2']);
-    Route::post('/attendance/rest_finish', [AttendanceController::class, 'store3']);
+    Route::get('/attendance', [AttendanceController::class, 'index']);
+    Route::post('/attendance/store', [AttendanceController::class, 'store']);
+    Route::post('/attendance/update_work', [AttendanceController::class, 'updateWork']);
+    Route::post('/attendance/update_rest', [AttendanceController::class, 'updateRest']);
+    Route::get('/attendance/list', [ListController::class, 'index']);
+    Route::get('/attendance/list/month', [ListController::class, 'indexMonth']);
+    Route::get('/attendance/{id}', [DetailController::class, 'index']);
 });

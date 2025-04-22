@@ -20,11 +20,6 @@ class Work extends Model
         return $this->hasMany(Rest::class);
     }
 
-    public function statuses()
-    {
-        return $this->hasMany(Status::class);
-    }
-
     public function applications()
     {
         return $this->hasMany(Application::class);

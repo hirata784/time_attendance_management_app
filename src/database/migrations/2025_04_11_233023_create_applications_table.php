@@ -18,7 +18,7 @@ class CreateApplicationsTable extends Migration
             $table->foreignId('work_id')->constrained()->cascadeOnDelete();
             $table->integer('application_status');
             $table->string('reason');
-            $table->timestamp('application_date');
+            $table->dateTime('application_date');
             $table->timestamps();
         });
     }
