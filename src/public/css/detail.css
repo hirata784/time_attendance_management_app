@@ -32,24 +32,42 @@ tr:nth-of-type(n+1) {
 
 th {
     letter-spacing: 0.1em;
-    padding: 20px 40px;
+    padding: 20px 200px 20px 40px;
     text-align: left;
     width: 25%;
+    white-space: nowrap;
+    color: #737373;
 }
 
 td {
     letter-spacing: 0.1em;
-    padding: 20px 350px 20px 100px;
+    padding: 30px 300px 30px 0;
     text-align: left;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.0rem;
+}
+
+.group {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    padding: 30px 315px 30px 15px;
+}
+
+.txt-group {
+    display: flex;
+    justify-content: space-between;
 }
 
 .txt {
-    width: 25%;
+    width: 100px;
+    line-height: 30px;
     border: 2px solid #f0eff2;
     border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.0rem;
+    text-align: center;
+    letter-spacing: 0.2rem;
 }
 
 .correction-btn {
@@ -59,9 +77,12 @@ td {
 
 .txa {
     width: 100%;
+    line-height: 30px;
     resize: none;
     border: 2px solid #f0eff2;
     border-radius: 5px;
+    padding-left: 10px;
+    font-size: 1.0rem;
 }
 
 .btn {
@@ -75,4 +96,63 @@ td {
     font-weight: bold;
     font-size: 1.5rem;
     text-align: center;
+}
+
+@media (max-width:1400px) {
+    html {
+        font-size: 25px;
+    }
+
+    .detail {
+        width: 90%;
+    }
+
+    .detail-tb {
+        width: 100%;
+    }
+
+    .detail-tb tr {
+        width: 100%;
+    }
+
+    .detail-tb th {
+        padding: 20px 0 20px 40px;
+    }
+
+    .detail-tb td {
+        display: block;
+        text-align: right;
+        width: 100%;
+        padding: 20px 40px;
+    }
+
+    .detail-tb td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .group {
+        position: relative;
+    }
+
+    .txt {
+        width: 200px;
+    }
+
+    .txa {
+        width: 450px;
+    }
+
+    .btn {
+        padding: 10px;
+        width: 100%;
+    }
+}
+
+@media (max-width:785px) {
+    .txa {
+        width: 200px;
+    }
 }

@@ -18,6 +18,7 @@ class ListController extends Controller
         $now_date = $now;
         $rests = [];
         $rest_sum = [];
+        $rest_seconds = 0;
 
         // 出勤時間の年月と打刻したユーザーを検索
         $works = Work::where('attendance_time', "LIKE", '%' . substr($now, 0, 7) . '%')
@@ -30,40 +31,37 @@ class ListController extends Controller
         }
 
         for ($i = 0; $i < count($works); $i++) {
-            // 休憩時間を追加
-            // 休憩していない場合、処理しない
-            if (isset($rests[$i][0]->rest_start) == false) {
-                // 合計値を求めるとき使用する休憩時間を0に設定する
-                $rest_seconds = 0;
-            } else {
-                // Restsテーブルより、休憩開始&終了時間を作成
-                $rest_start = new Carbon($rests[$i][0]->rest_start);
-                $rest_finish = new Carbon($rests[$i][0]->rest_finish);
-
-
-                // ****************************************************
-                // 複数休憩の場合、1つに時間をまとめる
-                // ****************************************************
-
-                // 差分の秒数を計算
-                $rest_seconds = $rest_start->diffInSeconds($rest_finish);
-                // 秒数が休憩開始 > 休憩終了の場合、1分のズレが生じるので調整する
-                if ($rest_start->second > $rest_finish->second) {
-                    $rest_seconds += 60;
-                }
-                // 秒数から時間、分を計算
-                $rest_hours = floor($rest_seconds / 3600);
-                $rest_minutes = floor(($rest_seconds % 3600) / 60);
-
-                // 結果を表示
-                if ($rest_minutes < 10) {
-                    // 分が10未満の場合、0を１つ追加
-                    $rest_time = $rest_hours . ":0" . $rest_minutes;
+            for ($j = 0; $j < count($rests[$i]); $j++) {
+                // 休憩時間を追加(複数休憩の場合、1つに時間をまとめる)
+                // 休憩していない場合、処理しない
+                if (isset($rests[$i][0]->rest_finish) == false) {
+                    // 合計値を求めるとき使用する休憩時間を0に設定する
+                    $rest_seconds = 0;
                 } else {
-                    $rest_time = $rest_hours . ":" . $rest_minutes;
+                    // Restsテーブルより、休憩開始&終了時間を作成
+                    $rest_start = new Carbon($rests[$i][$j]->rest_start);
+                    $rest_finish = new Carbon($rests[$i][$j]->rest_finish);
+
+                    // 差分の秒数を計算
+                    $rest_seconds += $rest_start->diffInSeconds($rest_finish);
+                    // 秒数が休憩開始 > 休憩終了の場合、1分のズレが生じるので調整する
+                    if ($rest_start->second > $rest_finish->second) {
+                        $rest_seconds += 60;
+                    }
+                    // 秒数から時間、分を計算
+                    $rest_hours = floor($rest_seconds / 3600);
+                    $rest_minutes = floor(($rest_seconds % 3600) / 60);
+
+                    // 結果を表示
+                    if ($rest_minutes < 10) {
+                        // 分が10未満の場合、0を１つ追加
+                        $rest_time = $rest_hours . ":0" . $rest_minutes;
+                    } else {
+                        $rest_time = $rest_hours . ":" . $rest_minutes;
+                    }
+                    // 配列要素を追加
+                    $works[$i]['rest_sum'] = $rest_time;
                 }
-                // 配列要素を追加
-                $works[$i]['rest_sum'] = $rest_time;
             }
 
             // 合計時間を追加
@@ -95,6 +93,7 @@ class ListController extends Controller
                 // 配列要素を追加
                 $works[$i]['sum_time'] = $sum_time;
             }
+            $rest_seconds = 0;
         }
         return view('list', compact('works', 'now_date'));
     }
@@ -107,7 +106,7 @@ class ListController extends Controller
         $now_date = new Carbon($request->now_date);
         $rests = [];
         $rest_sum = [];
-
+        $rest_seconds = 0;
 
         if ($request->has('last-month')) {
             // 前月を表示
@@ -129,37 +128,38 @@ class ListController extends Controller
             array_push($rests, $rest);
         }
 
-        // 休憩時間を追加
         for ($i = 0; $i < count($works); $i++) {
-            // 休憩時間を追加
-            // 休憩していない場合、処理しない
-            if (isset($rests[$i][0]->rest_start) == false) {
-                // 合計値を求めるとき使用する休憩時間を0に設定する
-                $rest_seconds = 0;
-            } else {
-                // Restsテーブルより、休憩開始&終了時間を作成
-                $rest_start = new Carbon($rests[$i][0]->rest_start);
-                $rest_finish = new Carbon($rests[$i][0]->rest_finish);
-
-                // 差分の秒数を計算
-                $rest_seconds = $rest_start->diffInSeconds($rest_finish);
-                // 秒数が休憩開始 > 休憩終了の場合、1分のズレが生じるので調整する
-                if ($rest_start->second > $rest_finish->second) {
-                    $rest_seconds += 60;
-                }
-                // 秒数から時間、分を計算
-                $rest_hours = floor($rest_seconds / 3600);
-                $rest_minutes = floor(($rest_seconds % 3600) / 60);
-
-                // 結果を表示
-                if ($rest_minutes < 10) {
-                    // 分が10未満の場合、0を１つ追加
-                    $rest_time = $rest_hours . ":0" . $rest_minutes;
+            for ($j = 0; $j < count($rests[$i]); $j++) {
+                // 休憩時間を追加(複数休憩の場合、1つに時間をまとめる)
+                // 休憩していない場合、処理しない
+                if (isset($rests[$i][0]->rest_finish) == false) {
+                    // 合計値を求めるとき使用する休憩時間を0に設定する
+                    $rest_seconds = 0;
                 } else {
-                    $rest_time = $rest_hours . ":" . $rest_minutes;
+                    // Restsテーブルより、休憩開始&終了時間を作成
+                    $rest_start = new Carbon($rests[$i][$j]->rest_start);
+                    $rest_finish = new Carbon($rests[$i][$j]->rest_finish);
+
+                    // 差分の秒数を計算
+                    $rest_seconds += $rest_start->diffInSeconds($rest_finish);
+                    // 秒数が休憩開始 > 休憩終了の場合、1分のズレが生じるので調整する
+                    if ($rest_start->second > $rest_finish->second) {
+                        $rest_seconds += 60;
+                    }
+                    // 秒数から時間、分を計算
+                    $rest_hours = floor($rest_seconds / 3600);
+                    $rest_minutes = floor(($rest_seconds % 3600) / 60);
+
+                    // 結果を表示
+                    if ($rest_minutes < 10) {
+                        // 分が10未満の場合、0を１つ追加
+                        $rest_time = $rest_hours . ":0" . $rest_minutes;
+                    } else {
+                        $rest_time = $rest_hours . ":" . $rest_minutes;
+                    }
+                    // 配列要素を追加
+                    $works[$i]['rest_sum'] = $rest_time;
                 }
-                // 配列要素を追加
-                $works[$i]['rest_sum'] = $rest_time;
             }
 
             // 合計時間を追加
@@ -191,6 +191,7 @@ class ListController extends Controller
                 // 配列要素を追加
                 $works[$i]['sum_time'] = $sum_time;
             }
+            $rest_seconds = 0;
         }
         return view('list', compact('works', 'now_date'));
     }
