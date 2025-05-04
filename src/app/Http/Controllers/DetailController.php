@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Work;
 use App\Models\User;
 use App\Models\Rest;
+use App\Models\Correction_work;
+use App\Models\Correction_rest;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests\AttendanceRequest;
-
 
 use Illuminate\Http\Request;
 
@@ -17,21 +19,20 @@ class DetailController extends Controller
     public function index($work_id)
     {
         // データ作成
-        $id = $work_id;
         $user_id = Auth::id();
         $list = [];
-        $rest_count = Rest::where('work_id', $id)->get();
+        $rest_count = Rest::where('work_id', $work_id)->get();
 
         // 名前
         $name = User::where('id', $user_id)->get();
         $list['name'] = $name[0]->name;
         // 日付
-        $attendance_time = Work::all()->find($id)->attendance_time;
+        $attendance_time = Work::all()->find($work_id)->attendance_time;
         $list['year'] = \Carbon\Carbon::parse($attendance_time)->format('Y年');
         $list['month_day'] = \Carbon\Carbon::parse($attendance_time)->format('n月j日');
         // 勤務時間
         $list['attendance_time'] = \Carbon\Carbon::parse($attendance_time)->format('H:i');
-        $leaving_time = Work::all()->find($id)->leaving_time;
+        $leaving_time = Work::all()->find($work_id)->leaving_time;
         // 退勤していない場合、ボックス内空白
         if ($leaving_time == null) {
             $list['leaving_time'] = "";
@@ -51,5 +52,67 @@ class DetailController extends Controller
             }
         }
         return view('detail', compact('work_id', 'list', 'rest_count'));
+    }
+
+    public function store($work_id, AttendanceRequest $request)
+    {
+        // 勤務時間の修正データ作成
+        // ユーザーid
+        $user_id = Auth::id();
+        // 申請日
+        $application_date = Carbon::now()->format('Y-m-d H:i:s');
+        // 申請ステータス(1：承認待ち 2：承認済み)
+        $application_status = 1;
+
+        // 出勤・退勤時間
+        $correction_date = $request->only(['attendance_time', 'leaving_time']);
+        // worksテーブルから出勤時間を呼び出す
+        $work_attendance_time = Work::all()->find($work_id)->attendance_time;
+        // 呼び出した年月日に、修正後の時間を後ろにくっつける(秒は0で統一)
+        $attendance_time = substr($work_attendance_time, 0, 11) . $correction_date['attendance_time'] . ":00";
+        // worksテーブルから退勤時間を呼び出す
+        $work_leaving_time = Work::all()->find(22)->leaving_time;
+        // 呼び出した年月日に、修正後の時間を後ろにくっつける(秒は0で統一)
+        $leaving_time = substr($work_leaving_time, 0, 11) . $correction_date['leaving_time'] . ":00";
+
+        // 備考
+        $correction_work = $request->only(['remarks']);
+        // 用意したデータを$correction_workへまとめる
+        $correction_work['user_id'] = $user_id;
+        $correction_work['work_id'] = $work_id;
+        $correction_work['application_date'] = $application_date;
+        $correction_work['application_status'] = $application_status;
+        $correction_work['attendance_time'] = $attendance_time;
+        $correction_work['leaving_time'] = $leaving_time;
+        // correction_worksに用意したデータでレコード追加
+        Correction_work::create($correction_work);
+
+        // 休憩時間の修正データ作成
+        // 休憩開始・終了時間
+        $rests = $request->only(['rest_start', 'rest_finish']);
+        // 休憩回数
+        $rest_count = $request->rest_count;
+
+        for ($i = 0; $i < $rest_count; $i++) {
+            // 追加分の休憩開始が空白の場合、処理しない
+            if ($rests['rest_start'][$i] == null) {
+                continue;
+            } else {
+                // 勤務時間データで呼び出した年月日に、修正後の時間を後ろにくっつける(秒は0で統一)
+                $rest_start = substr($work_attendance_time, 0, 11) . $rests['rest_start'][$i] . ":00";
+                $rest_finish = substr($work_attendance_time, 0, 11) . $rests['rest_finish'][$i] . ":00";
+
+                // 用意したデータを$correction_restへまとめる
+                $correction_rests[$i]['work_id']= $work_id;
+                $correction_rests[$i]['rest_start'] = $rest_start;
+                $correction_rests[$i]['rest_finish'] = $rest_finish;
+            }
+        }
+        // correction_restsに用意したデータでレコード追加
+        foreach ($correction_rests as $correction_rest) {
+            Correction_rest::create($correction_rest);
+        }
+        // 申請一覧ページへ遷移
+        return view('request');
     }
 }

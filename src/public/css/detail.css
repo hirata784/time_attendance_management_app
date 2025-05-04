@@ -98,6 +98,18 @@ td {
     text-align: center;
 }
 
+.th-error {
+    color: #FFF;
+    background-color: #ff0000;
+}
+
+.td-error {
+    height: 20px;
+    color: #ff0000;
+    text-align: right;
+    font-size: 1.0rem;
+}
+
 @media (max-width:1400px) {
     html {
         font-size: 25px;
@@ -148,6 +160,10 @@ td {
     .btn {
         padding: 10px;
         width: 100%;
+    }
+
+    .td-error {
+        text-align: right;
     }
 }
 

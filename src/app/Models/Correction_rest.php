@@ -5,24 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Application extends Model
+class Correction_rest extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'work_id',
-        'application_status',
-        'reason',
-        'application_date',
+        'rest_start',
+        'rest_finish',
     ];
 
     public function work()
     {
         return $this->belongsTo(Work::class);
-    }
-
-    public function approvals()
-    {
-        return $this->hasMany(Approval::class);
     }
 }

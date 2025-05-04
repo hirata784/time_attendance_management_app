@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\DetailController;
+use App\Http\Controllers\RequestController;
+use GuzzleHttp\Psr7\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/list', [ListController::class, 'index']);
     Route::get('/attendance/list/month', [ListController::class, 'indexMonth']);
     Route::get('/attendance/{id}', [DetailController::class, 'index']);
+    Route::post('/attendance/{id}/store', [DetailController::class, 'store']);
+    Route::get('/stamp_correction_request/list', [RequestController::class, 'index']);
 });
