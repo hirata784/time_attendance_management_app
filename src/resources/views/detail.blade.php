@@ -106,7 +106,7 @@
                 <tr>
                     <th>備考</th>
                     <td>
-                        <textarea class="txa" name="remarks"></textarea>
+                        <textarea class="txa" name="remarks">{{$list['remarks']}}</textarea>
                     </td>
                 </tr>
                 @error('remarks')

@@ -28,4 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/{id}', [DetailController::class, 'index']);
     Route::post('/attendance/{id}/store', [DetailController::class, 'store']);
     Route::get('/stamp_correction_request/list', [RequestController::class, 'index']);
+    Route::get('/stamp_correction_request/list/index_wait', [RequestController::class, 'indexWait']);
+    Route::get('/stamp_correction_request/list/index_approved', [RequestController::class, 'indexApproved']);
 });
