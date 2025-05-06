@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
@@ -27,5 +29,12 @@ class LoginRequest extends FormRequest
             'email' => ['required'],
             'password' => ['required']
         ];
+    }
+
+    public function authenticate(): void
+    {
+        if (!Auth::guard('admin')->attempt($this->only('email', 'password'))) {
+            throw ValidationException::withMessages(['failed' => __('auth.failed')]);
+        }
     }
 }

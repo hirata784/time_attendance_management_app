@@ -1,0 +1,23 @@
+html {
+    font-size: 16px;
+    background-color: #f0eff2;
+}
+
+h2 {
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}
+
+.list {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.list-heading {
+    margin: 80px 0 40px 0;
+    border-left: 7px solid #000;
+    padding: 0 20px;
+}

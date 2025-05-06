@@ -5,7 +5,10 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\DetailController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\admin\AdminLoginController;
+use App\Http\Controllers\admin\AdminListController;
 use GuzzleHttp\Psr7\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +33,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/stamp_correction_request/list', [RequestController::class, 'index']);
     Route::get('/stamp_correction_request/list/index_wait', [RequestController::class, 'indexWait']);
     Route::get('/stamp_correction_request/list/index_approved', [RequestController::class, 'indexApproved']);
+});
+
+Route::group(['prefix' => 'admin'], function () {
+    // ログイン
+    Route::get('login', [AdminLoginController::class, 'index'])->name('admin.login');
+    Route::post('login', [AdminLoginController::class, 'login']);
+    // 以下の中は認証必須のエンドポイントとなる
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::get('/attendance/list', [AdminListController::class, 'index'])->name('admin.attendance.list');
+    });
 });
