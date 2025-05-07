@@ -79,11 +79,12 @@ class AttendanceController extends Controller
         // データ作成
         $user_id = Auth::id();
         $now = Carbon::now();
+        $attendance_time = substr($now, 0, 16) . ":00";
 
         // 打刻処理
         $form = [
             'user_id' => $user_id,
-            'attendance_time' => $now,
+            'attendance_time' => $attendance_time,
         ];
         Work::create($form);
         return redirect()->back();
@@ -97,6 +98,7 @@ class AttendanceController extends Controller
 
         // 退勤処理
         if ($request->has('work')) {
+            $leaving_time = substr($now, 0, 16) . ":00";
             // 出勤時間の今日日付(年月日)と打刻したユーザーを検索
             $date = Work::where('attendance_time', "LIKE", '%' . substr($now, 0, 10) . '%')
                 ->where('user_id', $user_id)
@@ -104,13 +106,14 @@ class AttendanceController extends Controller
 
             // 打刻
             $form = [
-                'leaving_time' => $now,
+                'leaving_time' => $leaving_time,
             ];
             Work::find($date->id)->update($form);
         }
 
         // 休憩処理
         if ($request->has('rest')) {
+            $rest_start = substr($now, 0, 16) . ":00";
             // work_id:ログインユーザーidかつ今日日付の出勤時間
             $work_id = Work::where('attendance_time', "LIKE", '%' . substr($now, 0, 10) . '%')
                 ->where('user_id', Auth::id())
@@ -118,7 +121,7 @@ class AttendanceController extends Controller
 
             // 打刻
             $form = [
-                'rest_start' => $now,
+                'rest_start' => $rest_start,
                 'work_id' => $work_id->id,
             ];
             Rest::create($form);
@@ -130,6 +133,7 @@ class AttendanceController extends Controller
     {
         // データ作成
         $now = Carbon::now();
+        $rest_finish = substr($now, 0, 16) . ":00";
 
         // work_id:ログインユーザーidかつ今日日付の出勤時間
         $work_id = Work::where('attendance_time', "LIKE", '%' . substr($now, 0, 10) . '%')
@@ -143,7 +147,7 @@ class AttendanceController extends Controller
 
         // 打刻
         $form = [
-            'rest_finish' => $now,
+            'rest_finish' => $rest_finish,
         ];
         Rest::find($row->id)->update($form);
         return redirect()->back();

@@ -42,5 +42,6 @@ Route::group(['prefix' => 'admin'], function () {
     // 以下の中は認証必須のエンドポイントとなる
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/attendance/list', [AdminListController::class, 'index'])->name('admin.attendance.list');
+        Route::get('/attendance/list/day', [AdminListController::class, 'indexDay']);
     });
 });

@@ -25,15 +25,14 @@
             <th>合計</th>
             <th>詳細</th>
         </tr>
-        @foreach ($works as $work)
+        @foreach ($lists as $list)
         <tr>
-            <!-- <td>{{\Carbon\Carbon::now()->format('Y/m')}}</td> -->
-            <td>{{\Carbon\Carbon::parse($work->attendance_time)->isoFormat('MM/DD(ddd)')}}</td>
-            <td data-label="出勤">{{substr($work->attendance_time, 11, 5)}}</td>
-            <td data-label="退勤">{{substr($work->leaving_time, 11, 5)}}</td>
-            <td data-label="休憩">{{$work->rest_sum}}</td>
-            <td data-label="合計">{{$work->sum_time}}</td>
-            <td data-label="詳細"><a class="link" href="/attendance/{{ $work['id'] }}">詳細</a></td>
+            <td>{{$list['date']}}</td>
+            <td data-label="出勤">{{$list['attendance_time']}}</td>
+            <td data-label="退勤">{{$list['leaving_time']}}</td>
+            <td data-label="休憩">{{$list['rest_sum']}}</td>
+            <td data-label="合計">{{$list['sum_time']}}</td>
+            <td data-label="詳細"><a class="link" href="/attendance/{{ $list['work_id'] }}">詳細</a></td>
         </tr>
         @endforeach
     </table>

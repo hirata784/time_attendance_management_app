@@ -7,10 +7,6 @@ h2 {
     margin: 0;
 }
 
-p {
-    margin: 0;
-}
-
 .list {
     width: 60%;
     margin: 0 auto;
@@ -20,4 +16,93 @@ p {
     margin: 80px 0 40px 0;
     border-left: 7px solid #000;
     padding: 0 20px;
+}
+
+.list-day {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: #FFF;
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-bottom: 40px;
+}
+
+.last-day,
+.next-day {
+    border: none;
+    background: none;
+    font-size: 1rem;
+}
+
+.list-tb {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    background-color: #FFF;
+    border-radius: 20px;
+    color: #737373;
+}
+
+tr:nth-of-type(n+1) {
+    border-bottom: 3px solid #f0eff2;
+}
+
+th {
+    letter-spacing: 0.1em;
+    padding: 10px;
+}
+
+td {
+    letter-spacing: 0.1em;
+    padding: 10px;
+}
+
+.link {
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+}
+
+
+@media (max-width:950px) {
+    html {
+        font-size: 32px;
+    }
+
+    .list {
+        width: 90%;
+    }
+
+    .list-tb {
+        width: 100%;
+    }
+
+    .list-tb .thead {
+        display: none;
+    }
+
+    .list-tb tr {
+        width: 100%;
+    }
+
+    .list-tb td {
+        display: block;
+        text-align: right;
+        width: 100%;
+        border-bottom: 3px solid #f0eff2;
+        padding: 10px 30px;
+    }
+
+    .list-tb td:first-child {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .list-tb td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        margin-right: 10px;
+    }
 }
