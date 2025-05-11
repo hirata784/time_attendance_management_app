@@ -106,6 +106,33 @@
                         </li>
                         @endif
                         @endif
+                        <!-- 管理者ログインのヘッダー -->
+                        @if(Auth::guard('admin')->check())
+                        <li class="nav-item">
+                            <form action="/admin/attendance/list" method="get">
+                                @csrf
+                                <button class="nav-btn">勤怠一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/admin/staff/list" method="get">
+                                @csrf
+                                <button class="nav-btn">スタッフ一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="">
+                                @csrf
+                                <button class="nav-btn">申請一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button class="nav-btn">ログアウト</button>
+                            </form>
+                        </li>
+                        @endif
                     </ul>
                 </nav>
 
@@ -191,6 +218,33 @@
                             </form>
                         </li>
                         @endif
+                        @endif
+                        <!-- 管理者ログインのヘッダー -->
+                        @if(Auth::guard('admin')->check())
+                        <li class="nav-item">
+                            <form action="/admin/attendance/list" method="get">
+                                @csrf
+                                <button class="nav-btn">勤怠一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/admin/staff/list" method="get">
+                                @csrf
+                                <button class="nav-btn">スタッフ一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="">
+                                @csrf
+                                <button class="nav-btn">申請一覧</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button class="nav-btn">ログアウト</button>
+                            </form>
+                        </li>
                         @endif
                     </ul>
                 </nav>

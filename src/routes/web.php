@@ -7,6 +7,8 @@ use App\Http\Controllers\DetailController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\AdminListController;
+use App\Http\Controllers\admin\StaffController;
+use App\Http\Controllers\admin\IndividualController;
 use GuzzleHttp\Psr7\Request;
 
 
@@ -41,6 +43,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::middleware(['admin'])->group(function () {
         Route::get('/attendance/list', [AdminListController::class, 'index'])->name('admin.attendance.list');
         Route::get('/attendance/list/day', [AdminListController::class, 'indexDay']);
+        Route::get('/staff/list', [StaffController::class, 'index']);
+        Route::get('/attendance/staff/{id}', [IndividualController::class, 'index']);
     });
 });
 
