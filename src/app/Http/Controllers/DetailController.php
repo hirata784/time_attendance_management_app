@@ -19,7 +19,7 @@ class DetailController extends Controller
     public function index($work_id)
     {
         // データ作成
-        $user_id = Auth::id();
+        $user_id = Work::find($work_id)->user_id;
         $list = [];
         // 承認ステータスを確認
         $correction_work = Correction_work::where('work_id', $work_id)->get();
@@ -93,11 +93,11 @@ class DetailController extends Controller
         return view('detail', compact('work_id', 'list', 'rest_count'));
     }
 
-    public function store($work_id, AttendanceRequest $request)
+    public function update($work_id, AttendanceRequest $request)
     {
         // 勤務時間の修正データ作成
         // ユーザーid
-        $user_id = Auth::id();
+        $user_id = Work::find($work_id)->user_id;
         // 申請日
         $application_date = Carbon::now()->format('Y-m-d H:i:s');
         // 申請ステータス(1：承認待ち 2：承認済み)
@@ -123,14 +123,20 @@ class DetailController extends Controller
         $correction_work['application_status'] = $application_status;
         $correction_work['attendance_time'] = $attendance_time;
         $correction_work['leaving_time'] = $leaving_time;
-        // correction_worksに用意したデータでレコード追加
-        Correction_work::create($correction_work);
+
+        if (Auth::guard('admin')->check()) {
+            // 管理者ログインの場合、直接修正する
+            Work::find($work_id)->update($correction_work);
+        } else {
+            // 一般ログインの場合、修正申請する
+            Correction_work::create($correction_work);
+        }
 
         // 休憩時間の修正データ作成
         // 休憩開始・終了時間
         $rests = $request->only(['rest_start', 'rest_finish']);
         // 休憩回数
-        $rest_count = $request->rest_count;
+        $rest_count = count($rests);
 
         for ($i = 0; $i < $rest_count; $i++) {
             // 追加分の休憩開始が空白の場合、処理しない
@@ -147,9 +153,21 @@ class DetailController extends Controller
                 $correction_rests[$i]['rest_finish'] = $rest_finish;
             }
         }
+
         // correction_restsに用意したデータでレコード追加
+        // 管理者ログインの場合、該当work_idの休憩データを削除
+        if (Auth::guard('admin')->check()) {
+            Rest::where('work_id', $work_id)->delete();
+        }
+
         foreach ($correction_rests as $correction_rest) {
-            Correction_rest::create($correction_rest);
+            if (Auth::guard('admin')->check()) {
+                // 管理者ログインの場合、直接修正
+                Rest::create($correction_rest);
+            } else {
+                // 一般ログインの場合、修正申請する
+                Correction_rest::create($correction_rest);
+            }
         }
         return redirect()->back();
     }

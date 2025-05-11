@@ -37,7 +37,6 @@ class AdminListController extends Controller
         } else {
             $lists = $this->list($works, $rests, $rest_minute);
         }
-        // dd($lists);
         return view('admin/list', compact('lists', 'now_date'));
     }
 
@@ -52,12 +51,12 @@ class AdminListController extends Controller
         $lists = [];
 
         if ($request->has('last-day')) {
-            // 前月を表示
+            // 前日を表示
             $now_date->subDay(1);
         }
 
         if ($request->has('next-day')) {
-            // 翌月を表示
+            // 翌日を表示
             $now_date->addDay(1);
         }
 
@@ -92,14 +91,14 @@ class AdminListController extends Controller
             $lists[$i]['work_id'] = $work_id;
             $lists[$i]['name'] = $name;
             $lists[$i]['attendance_time'] = \Carbon\Carbon::parse($attendance_time)->format('H:i');
+            // 休憩合計時間にnullを代入(未休憩対策)
+            $lists[$i]['rest_sum'] = null;
             for ($j = 0; $j < count($rests[$i]); $j++) {
                 // 休憩時間を追加(複数休憩の場合、1つに時間をまとめる)
                 // 休憩していない場合、処理しない
                 if (isset($rests[$i][0]->rest_finish) == false) {
                     // 合計値を求めるとき使用する休憩時間を0に設定する
                     $rest_minute = 0;
-                    // 配列要素を追加
-                    $lists[$i]['rest_sum'] = null;
                 } else {
                     // Restsテーブルより、休憩開始&終了時間を作成
                     $rest_start = new Carbon($rests[$i][$j]->rest_start);

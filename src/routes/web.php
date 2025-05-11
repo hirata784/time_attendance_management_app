@@ -28,8 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance/update_rest', [AttendanceController::class, 'updateRest']);
     Route::get('/attendance/list', [ListController::class, 'index']);
     Route::get('/attendance/list/month', [ListController::class, 'indexMonth']);
-    Route::get('/attendance/{id}', [DetailController::class, 'index']);
-    Route::post('/attendance/{id}/store', [DetailController::class, 'store']);
     Route::get('/stamp_correction_request/list', [RequestController::class, 'index']);
     Route::get('/stamp_correction_request/list/index_wait', [RequestController::class, 'indexWait']);
     Route::get('/stamp_correction_request/list/index_approved', [RequestController::class, 'indexApproved']);
@@ -40,8 +38,15 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('login', [AdminLoginController::class, 'index'])->name('admin.login');
     Route::post('login', [AdminLoginController::class, 'login']);
     // 以下の中は認証必須のエンドポイントとなる
-    Route::middleware(['auth:admin'])->group(function () {
+    Route::middleware(['admin'])->group(function () {
         Route::get('/attendance/list', [AdminListController::class, 'index'])->name('admin.attendance.list');
         Route::get('/attendance/list/day', [AdminListController::class, 'indexDay']);
     });
 });
+
+Route::middleware(['auth', 'admin'])->group(
+    function () {
+        Route::get('/attendance/{id}', [DetailController::class, 'index']);
+        Route::post('/attendance/{id}/update', [DetailController::class, 'update']);
+    }
+);

@@ -9,7 +9,7 @@
     <div class="detail-heading">
         <h2>勤怠詳細</h2>
     </div>
-    <form action="/attendance/{{ $work_id }}/store" method="post">
+    <form action="/attendance/{{ $work_id }}/update" method="post">
         @csrf
         <table class="detail-tb">
             <tr>
