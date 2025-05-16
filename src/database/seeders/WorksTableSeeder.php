@@ -14,9 +14,9 @@ class WorksTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 3; $i <= 4; $i++) {
-            for ($j = 1; $j <= 10; $j++) {
-                for ($k = 1; $k <= 2; $k++) {
+        for ($i = 3; $i <= 5; $i++) {
+            for ($j = 1; $j <= 30; $j++) {
+                for ($k = 1; $k <= 3; $k++) {
                     $param = [
                         'user_id' => $k,
                         'attendance_time' => '2025-0' . $i . '-0' . $j . ' 09:00:00',

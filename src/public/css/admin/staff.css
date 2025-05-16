@@ -57,8 +57,15 @@ td {
         width: 90%;
     }
 
+    .table-wrap {
+        width: 100%;
+        overflow-x: scroll;
+    }
+
     .staff-tb {
         width: 100%;
+        white-space: nowrap;
+        min-width: 700px;
     }
 
     .staff-tb .thead {

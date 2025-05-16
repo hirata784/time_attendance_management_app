@@ -45,10 +45,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/attendance/list/day', [AdminListController::class, 'indexDay']);
         Route::get('/staff/list', [StaffController::class, 'index']);
         Route::get('/attendance/staff/{id}', [IndividualController::class, 'index']);
+        Route::get('/attendance/staff/{id}/month', [IndividualController::class, 'indexMonth']);
     });
 });
 
-Route::middleware(['auth', 'admin'])->group(
+Route::middleware(['auth', 'admin'])->withoutMiddleware('auth')->group(
     function () {
         Route::get('/attendance/{id}', [DetailController::class, 'index']);
         Route::post('/attendance/{id}/update', [DetailController::class, 'update']);
