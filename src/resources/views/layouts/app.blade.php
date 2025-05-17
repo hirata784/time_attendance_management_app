@@ -121,7 +121,7 @@
                             </form>
                         </li>
                         <li class="nav-item">
-                            <form action="">
+                            <form action="/stamp_correction_request/list">
                                 @csrf
                                 <button class="nav-btn">申請一覧</button>
                             </form>
@@ -234,7 +234,7 @@
                             </form>
                         </li>
                         <li class="nav-item">
-                            <form action="">
+                            <form action="/stamp_correction_request/list">
                                 @csrf
                                 <button class="nav-btn">申請一覧</button>
                             </form>

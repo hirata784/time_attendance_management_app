@@ -14,11 +14,19 @@ class RequestController extends Controller
     {
         // データ作成
         $data = null;
-        $user_id = Auth::id();
-        $user = User::where('id', $user_id)->get();
-        // ログインユーザーを抽出
-        $correction_work = Correction_work::where('user_id', $user_id)
-            ->get();
+        if (Auth::guard('admin')->check()) {
+            // 管理者のログイン場合：全ての一般ユーザーを表示
+            $user = User::all();
+            // 全一般ユーザーを抽出
+            $correction_work = Correction_work::all();
+        } else {
+            // 一般ログインの場合：ログイン中のユーザーのみ表示
+            $user_id = Auth::id();
+            $user = User::where('id', $user_id)->get();
+            // ログインユーザーを抽出
+            $correction_work = Correction_work::where('user_id', $user_id)
+                ->get();
+        }
         if (count($correction_work) == 0) {
             // 該当データがない場合
             $lists = [];
@@ -32,12 +40,21 @@ class RequestController extends Controller
     {
         // データ作成
         $data = "wait";
-        $user_id = Auth::id();
-        $user = User::where('id', $user_id)->get();
-        // ログインユーザーかつ承認待ちを抽出
-        $correction_work = Correction_work::where('user_id', $user_id)
-            ->where('application_status', 1)
-            ->get();
+        if (Auth::guard('admin')->check()) {
+            // 管理者のログイン場合：全ての一般ユーザーを表示
+            $user = User::all();
+            // 全一般ユーザーかつ承認待ちを抽出
+            $correction_work = Correction_work::where('application_status', 1)
+                ->get();
+        } else {
+            // 一般ログインの場合：ログイン中のユーザーのみ表示
+            $user_id = Auth::id();
+            $user = User::where('id', $user_id)->get();
+            // ログインユーザーかつ承認待ちを抽出
+            $correction_work = Correction_work::where('user_id', $user_id)
+                ->where('application_status', 1)
+                ->get();
+        }
         if (count($correction_work) == 0) {
             // 該当データがない場合
             $lists = [];
@@ -51,12 +68,21 @@ class RequestController extends Controller
     {
         // データ作成
         $data = "approved";
-        $user_id = Auth::id();
-        $user = User::where('id', $user_id)->get();
-        // ログインユーザーかつ承認済みを抽出
-        $correction_work = Correction_work::where('user_id', $user_id)
-            ->where('application_status', 2)
-            ->get();
+        if (Auth::guard('admin')->check()) {
+            // 管理者のログイン場合：全ての一般ユーザーを表示
+            $user = User::all();
+            // 全一般ユーザーかつ承認済みを抽出
+            $correction_work = Correction_work::where('application_status', 2)
+                ->get();
+        } else {
+            // 一般ログインの場合：ログイン中のユーザーのみ表示
+            $user_id = Auth::id();
+            $user = User::where('id', $user_id)->get();
+            // ログインユーザーかつ承認済みを抽出
+            $correction_work = Correction_work::where('user_id', $user_id)
+                ->where('application_status', 2)
+                ->get();
+        }
         if (count($correction_work) == 0) {
             // 該当データがない場合
             $lists = [];
@@ -81,7 +107,7 @@ class RequestController extends Controller
                 $lists[$i]['application_status'] = "承認済み";
             }
             // 名前
-            $lists[$i]['name'] = $user[0]['name'];
+            $lists[$i]['name'] = User::find($correction_work[$i]['user_id'])->name;
             // 対象日時
             $lists[$i]['attendance_time'] = \Carbon\Carbon::parse($correction_work[$i]['attendance_time'])->format('Y/m/d');
             // 申請理由

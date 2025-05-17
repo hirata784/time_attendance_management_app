@@ -24,7 +24,7 @@ class AdminLoginController extends Controller
         }
 
         return back()->withErrors([
-            'login' => ['ログインに失敗しました'],
+            'login' => 'ログイン情報が登録されていません'
         ]);
     }
 }

@@ -9,7 +9,6 @@ use App\Models\Rest;
 use App\Models\Correction_work;
 use App\Models\Correction_rest;
 use Illuminate\Support\Facades\Auth;
-
 use App\Http\Requests\AttendanceRequest;
 
 use Illuminate\Http\Request;

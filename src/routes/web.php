@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\AdminListController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\admin\IndividualController;
+use App\Http\Controllers\admin\FixController;
 use GuzzleHttp\Psr7\Request;
 
 
@@ -30,9 +31,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance/update_rest', [AttendanceController::class, 'updateRest']);
     Route::get('/attendance/list', [ListController::class, 'index']);
     Route::get('/attendance/list/month', [ListController::class, 'indexMonth']);
-    Route::get('/stamp_correction_request/list', [RequestController::class, 'index']);
-    Route::get('/stamp_correction_request/list/index_wait', [RequestController::class, 'indexWait']);
-    Route::get('/stamp_correction_request/list/index_approved', [RequestController::class, 'indexApproved']);
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -53,5 +51,9 @@ Route::middleware(['auth', 'admin'])->withoutMiddleware('auth')->group(
     function () {
         Route::get('/attendance/{id}', [DetailController::class, 'index']);
         Route::post('/attendance/{id}/update', [DetailController::class, 'update']);
+        Route::get('/stamp_correction_request/list', [RequestController::class, 'index']);
+        Route::get('/stamp_correction_request/list/index_wait', [RequestController::class, 'indexWait']);
+        Route::get('/stamp_correction_request/list/index_approved', [RequestController::class, 'indexApproved']);
+        Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [FixController::class, 'edit']);
     }
 );

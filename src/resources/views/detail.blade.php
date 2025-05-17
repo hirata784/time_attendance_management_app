@@ -27,9 +27,9 @@
                 <tr>
                     <th>出勤・退勤</th>
                     <td class="txt-group">
-                        <input type="text" class="txt" name="attendance_time" value="{{$list['attendance_time']}}">
+                        <input type="text" class="txt" name="attendance_time" value="{{old('attendance_time', $list['attendance_time'])}}" />
                         <span>〜</span>
-                        <input type="text" class="txt" name="leaving_time" value="{{$list['leaving_time']}}">
+                        <input type="text" class="txt" name="leaving_time" value="{{old('leaving_time', $list['leaving_time'])}}" />
                     </td>
                 </tr>
                 @error('attendance_time')
@@ -54,12 +54,20 @@
                     <tr>
                         <th>休憩</th>
                         <td class="txt-group">
-                            <input type="text" class="txt" name="rest_start[]" value="{{$list['rest_start'][$i]}}">
+                            <input type="text" class="txt" name="rest_start[]" value="{{old('rest_start.'.$i, $list['rest_start'][$i])}}" />
                             <span>〜</span>
-                            <input type="text" class="txt" name="rest_finish[]" value="{{$list['rest_finish'][$i]}}">
+                            <input type="text" class="txt" name="rest_finish[]" value="{{old('rest_finish.'.$i, $list['rest_finish'][$i])}}" />
                         </td>
                     </tr>
-                    @error('rest_start')
+                    @error('rest_start.0')
+                    <tr>
+                        <th class="th-error">ERROR</th>
+                        <td class="td-error">
+                            {{ $message }}
+                        </td>
+                    </tr>
+                    @enderror
+                    @error('rest_finish.0')
                     <tr>
                         <th class="th-error">ERROR</th>
                         <td class="td-error">
@@ -71,12 +79,47 @@
                     <tr>
                         <th>休憩{{$i+1}}</th>
                         <td class="txt-group">
-                            <input type="text" class="txt" name="rest_start[]" value="{{$list['rest_start'][$i]}}">
+                            <input type="text" class="txt" name="rest_start[]" value="{{old('rest_start.'.$i, $list['rest_start'][$i])}}" />
                             <span>〜</span>
-                            <input type="text" class="txt" name="rest_finish[]" value="{{$list['rest_finish'][$i]}}">
+                            <input type="text" class="txt" name="rest_finish[]" value="{{old('rest_finish.'.$i, $list['rest_finish'][$i])}}" />
                         </td>
                     </tr>
-                    @error('rest_start')
+                    @error('rest_start.'.$i)
+                    <tr>
+                        <th class="th-error">ERROR</th>
+                        <td class="td-error">
+                            {{ $message }}
+                        </td>
+                    </tr>
+                    @enderror
+                    @error('rest_finish.'.$i)
+                    <tr>
+                        <th class="th-error">ERROR</th>
+                        <td class="td-error">
+                            {{ $message }}
+                        </td>
+                    </tr>
+                    @enderror
+                    @endif
+                    <!-- 休憩i回目の時、入力フィールド追加 -->
+                    @if($i == count($rest_count)-1)
+                    <tr>
+                        <th>休憩{{$i+2}}</th>
+                        <td class="txt-group">
+                            <input type="text" class="txt" name="rest_start[]" value="">
+                            <span>〜</span>
+                            <input type="text" class="txt" name="rest_finish[]" value="">
+                        </td>
+                    </tr>
+                    @error('rest_start.'.($i+1))
+                    <tr>
+                        <th class="th-error">ERROR</th>
+                        <td class="td-error">
+                            {{ $message }}
+                        </td>
+                    </tr>
+                    @enderror
+                    @error('rest_finish.'.($i+1))
                     <tr>
                         <th class="th-error">ERROR</th>
                         <td class="td-error">
@@ -89,25 +132,9 @@
                     <input type="hidden" name="rest_count" value="{{$i+2}}">
                     @endfor
                     <tr>
-                        <th>休憩{{count($rest_count)+1}}</th>
-                        <td class="txt-group">
-                            <input type="text" class="txt" name="rest_start[]" value="">
-                            <span>〜</span>
-                            <input type="text" class="txt" name="rest_finish[]" value="">
-                        </td>
-                    </tr>
-                    @error('rest_start')
-                    <tr>
-                        <th class="th-error">ERROR</th>
-                        <td class="td-error">
-                            {{ $message }}
-                        </td>
-                    </tr>
-                    @enderror
-                    <tr>
                         <th>備考</th>
                         <td>
-                            <textarea class="txa" name="remarks">{{$list['remarks']}}</textarea>
+                            <textarea class="txa" name="remarks">{{ old('remarks', $list['remarks']) }}</textarea>
                         </td>
                     </tr>
                     @error('remarks')

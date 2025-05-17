@@ -23,6 +23,9 @@
                     @error('email')
                     {{ $message }}
                     @enderror
+                    @error('login')
+                    {{ $message }}
+                    @enderror
                 </div>
             </div>
         </div>
