@@ -20,43 +20,81 @@ class DetailController extends Controller
         // データ作成
         $user_id = Work::find($work_id)->user_id;
         $list = [];
-        // 承認ステータスを確認
-        $correction_work = Correction_work::where('work_id', $work_id)->get();
+        // 承認ステータスを確認。昇順に並び替える
+        $correction_work = Correction_work::orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->where('work_id', $work_id)
+            ->get();
         if (isset($correction_work[0]['application_status']) == true) {
-            // 承認待ち・承認済みの場合
-            // 休憩回数
-            $rest_count = Correction_rest::where('work_id', $work_id)->get();
-            // 名前
-            $name = User::where('id', $user_id)->get();
-            $list['name'] = $name[0]->name;
-            // 日付
-            $attendance_time = $correction_work[0]['attendance_time'];
-            $list['year'] = \Carbon\Carbon::parse($attendance_time)->format('Y年');
-            $list['month_day'] = \Carbon\Carbon::parse($attendance_time)->format('n月j日');
-            // 勤務時間
-            $list['attendance_time'] = \Carbon\Carbon::parse($attendance_time)->format('H:i');
-            $leaving_time = $correction_work[0]['leaving_time'];
-            // 退勤していない場合、ボックス内空白
-            if ($leaving_time == null) {
-                $list['leaving_time'] = "";
-            } else {
-                $list['leaving_time'] = \Carbon\Carbon::parse($leaving_time)->format('H:i');
-            }
-            // 備考
-            $list['remarks'] = $correction_work[0]['remarks'];
-
-            // 休憩時間
-            for ($i = 0; $i < count($rest_count); $i++) {
-                $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');
-                // 休憩終了していない場合、ボックス内空白
-                if ($rest_count[$i]->rest_finish == null) {
-                    $list['rest_finish'][$i] = "";
+            if ($correction_work[0]['application_status'] == 1) {
+                // 承認待ちの場合、申請中のデータを表示
+                // 休憩回数
+                $rest_count = Correction_rest::where('work_id', $work_id)->get();
+                // 名前
+                $name = User::where('id', $user_id)->get();
+                $list['name'] = $name[0]->name;
+                // 日付
+                $attendance_time = $correction_work[0]['attendance_time'];
+                $list['year'] = \Carbon\Carbon::parse($attendance_time)->format('Y年');
+                $list['month_day'] = \Carbon\Carbon::parse($attendance_time)->format('n月j日');
+                // 勤務時間
+                $list['attendance_time'] = \Carbon\Carbon::parse($attendance_time)->format('H:i');
+                $leaving_time = $correction_work[0]['leaving_time'];
+                // 退勤していない場合、ボックス内空白
+                if ($leaving_time == null) {
+                    $list['leaving_time'] = "";
                 } else {
-                    $list['rest_finish'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_finish)->format('H:i');
+                    $list['leaving_time'] = \Carbon\Carbon::parse($leaving_time)->format('H:i');
+                }
+                // 備考
+                $list['remarks'] = $correction_work[0]['remarks'];
+
+                // 休憩時間
+                for ($i = 0; $i < count($rest_count); $i++) {
+                    $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');
+                    // 休憩終了していない場合、ボックス内空白
+                    if ($rest_count[$i]->rest_finish == null) {
+                        $list['rest_finish'][$i] = "";
+                    } else {
+                        $list['rest_finish'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_finish)->format('H:i');
+                    }
+                }
+            } elseif ($correction_work[0]['application_status'] == 2) {
+                // 承認済み・未承認の場合、勤務時間と休憩テーブルデータを表示
+                // 休憩回数
+                $rest_count = Rest::where('work_id', $work_id)->get();
+                // 名前
+                $name = User::where('id', $user_id)->get();
+                $list['name'] = $name[0]->name;
+                // 日付
+                $attendance_time = Work::all()->find($work_id)->attendance_time;
+                $list['year'] = \Carbon\Carbon::parse($attendance_time)->format('Y年');
+                $list['month_day'] = \Carbon\Carbon::parse($attendance_time)->format('n月j日');
+                // 勤務時間
+                $list['attendance_time'] = \Carbon\Carbon::parse($attendance_time)->format('H:i');
+                $leaving_time = Work::all()->find($work_id)->leaving_time;
+                // 退勤していない場合、ボックス内空白
+                if ($leaving_time == null) {
+                    $list['leaving_time'] = "";
+                } else {
+                    $list['leaving_time'] = \Carbon\Carbon::parse($leaving_time)->format('H:i');
+                }
+                // 備考
+                $list['remarks'] = null;
+                // 休憩時間
+                for ($i = 0; $i < count($rest_count); $i++) {
+                    $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');
+                    // 休憩終了していない場合、ボックス内空白
+                    if ($rest_count[$i]->rest_finish == null) {
+                        $list['rest_finish'][$i] = "";
+                    } else {
+                        $list['rest_finish'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_finish)->format('H:i');
+                    }
                 }
             }
+            return view('detail', compact('work_id', 'list', 'rest_count'));
         } else {
-            // 承認待ちじゃない場合
+            // 承認済み・未承認の場合、勤務時間と休憩テーブルデータを表示
             // 休憩回数
             $rest_count = Rest::where('work_id', $work_id)->get();
             // 名前
@@ -77,7 +115,6 @@ class DetailController extends Controller
             }
             // 備考
             $list['remarks'] = null;
-
             // 休憩時間
             for ($i = 0; $i < count($rest_count); $i++) {
                 $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');

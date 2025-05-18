@@ -55,5 +55,6 @@ Route::middleware(['auth', 'admin'])->withoutMiddleware('auth')->group(
         Route::get('/stamp_correction_request/list/index_wait', [RequestController::class, 'indexWait']);
         Route::get('/stamp_correction_request/list/index_approved', [RequestController::class, 'indexApproved']);
         Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [FixController::class, 'edit']);
+        Route::post('/stamp_correction_request/approve/{attendance_correct_request}/update', [FixController::class, 'update']);
     }
 );
