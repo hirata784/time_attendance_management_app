@@ -15,21 +15,38 @@ use Illuminate\Http\Request;
 
 class DetailController extends Controller
 {
-    public function index($work_id)
+    public function index($id, Request $request)
     {
-        // データ作成
-        $user_id = Work::find($work_id)->user_id;
-        $list = [];
-        // 承認ステータスを確認。昇順に並び替える
-        $correction_work = Correction_work::orderBy('created_at', 'DESC')
-            ->orderBy('id', 'DESC')
-            ->where('work_id', $work_id)
-            ->get();
+        // どのページから遷移してきたかチェック
+        $url = $_SERVER['HTTP_REFERER'];
+
+        if (strpos($url, 'http://localhost/attendance') !== false or strpos($url, 'http://localhost/admin/attendance') !== false) {
+            // 勤怠一覧画面から
+            // データ作成(Worksのidを元に)
+            $user_id = Work::find($id)->user_id;
+            $work_id  = $id;
+            $list = [];
+            // Correction_workのデータを確認。昇順に並び替える
+            $correction_work = Correction_work::orderBy('created_at', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->where('work_id', $work_id)
+                ->get();
+        } elseif (strpos($url, 'http://localhost/stamp_correction_request') !== false) {
+            // 申請一覧画面から
+            // データ作成(Correction_worksのidを元に)
+            $user_id = Correction_work::find($id)->user_id;
+            $work_id = Correction_work::find($id)->work_id;
+            $list = [];
+            // Correction_workのデータを確認
+            $correction_work = Correction_work::where('id', $id)
+                ->get();
+        }
+
         if (isset($correction_work[0]['application_status']) == true) {
             if ($correction_work[0]['application_status'] == 1) {
                 // 承認待ちの場合、申請中のデータを表示
                 // 休憩回数
-                $rest_count = Correction_rest::where('work_id', $work_id)->get();
+                $rest_count = Correction_work::find($correction_work[0]['id'])->correction_rests;
                 // 名前
                 $name = User::where('id', $user_id)->get();
                 $list['name'] = $name[0]->name;
@@ -48,7 +65,6 @@ class DetailController extends Controller
                 }
                 // 備考
                 $list['remarks'] = $correction_work[0]['remarks'];
-
                 // 休憩時間
                 for ($i = 0; $i < count($rest_count); $i++) {
                     $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');
@@ -60,27 +76,33 @@ class DetailController extends Controller
                     }
                 }
             } elseif ($correction_work[0]['application_status'] == 2) {
-                // 承認済み・未承認の場合、勤務時間と休憩テーブルデータを表示
+                // 承認済みの場合、勤務時間と休憩テーブルデータを表示
                 // 休憩回数
-                $rest_count = Rest::where('work_id', $work_id)->get();
+                $rest_count = Correction_work::find($correction_work[0]['id'])->correction_rests;
                 // 名前
                 $name = User::where('id', $user_id)->get();
                 $list['name'] = $name[0]->name;
                 // 日付
-                $attendance_time = Work::all()->find($work_id)->attendance_time;
+                $attendance_time = $correction_work[0]['attendance_time'];
                 $list['year'] = \Carbon\Carbon::parse($attendance_time)->format('Y年');
                 $list['month_day'] = \Carbon\Carbon::parse($attendance_time)->format('n月j日');
                 // 勤務時間
                 $list['attendance_time'] = \Carbon\Carbon::parse($attendance_time)->format('H:i');
-                $leaving_time = Work::all()->find($work_id)->leaving_time;
+                $leaving_time = $correction_work[0]['leaving_time'];
                 // 退勤していない場合、ボックス内空白
                 if ($leaving_time == null) {
                     $list['leaving_time'] = "";
                 } else {
                     $list['leaving_time'] = \Carbon\Carbon::parse($leaving_time)->format('H:i');
                 }
-                // 備考
-                $list['remarks'] = null;
+                // 備考 遷移元によって表示を変更
+                if (strpos($url, 'http://localhost/attendance') !== false or strpos($url, 'http://localhost/admin/attendance') !== false) {
+                    // 勤怠一覧画面から 空白
+                    $list['remarks'] = null;
+                } elseif (strpos($url, 'http://localhost/stamp_correction_request/list') !== false) {
+                    // 申請一覧画面から correction_workのremarks
+                    $list['remarks'] = $correction_work[0]['remarks'];
+                }
                 // 休憩時間
                 for ($i = 0; $i < count($rest_count); $i++) {
                     $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');
@@ -94,7 +116,7 @@ class DetailController extends Controller
             }
             return view('detail', compact('work_id', 'list', 'rest_count'));
         } else {
-            // 承認済み・未承認の場合、勤務時間と休憩テーブルデータを表示
+            // 未承認の場合、勤務時間と休憩テーブルデータを表示
             // 休憩回数
             $rest_count = Rest::where('work_id', $work_id)->get();
             // 名前
@@ -172,7 +194,7 @@ class DetailController extends Controller
         // 休憩開始・終了時間
         $rests = $request->only(['rest_start', 'rest_finish']);
         // 休憩回数
-        $rest_count = count($rests);
+        $rest_count = count($rests['rest_start']);
 
         for ($i = 0; $i < $rest_count; $i++) {
             // 追加分の休憩開始が空白の場合、処理しない
@@ -184,7 +206,13 @@ class DetailController extends Controller
                 $rest_finish = substr($work_attendance_time, 0, 11) . $rests['rest_finish'][$i] . ":00";
 
                 // 用意したデータを$correction_restへまとめる
-                $correction_rests[$i]['work_id'] = $work_id;
+                // 管理者ログインの場合、work_id
+                if (Auth::guard('admin')->check()) {
+                    $correction_rests[$i]['work_id'] = $work_id;
+                } else {
+                    // 一般ログインの場合、correction_work_id
+                    $correction_rests[$i]['correction_work_id'] = Correction_work::count();
+                }
                 $correction_rests[$i]['rest_start'] = $rest_start;
                 $correction_rests[$i]['rest_finish'] = $rest_finish;
             }

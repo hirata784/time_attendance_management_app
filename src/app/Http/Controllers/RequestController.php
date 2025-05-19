@@ -95,6 +95,8 @@ class RequestController extends Controller
     public function approvalList($user, $correction_work)
     {
         for ($i = 0; $i < count($correction_work); $i++) {
+            // id
+            $lists[$i]['id'] = $correction_work[$i]['id'];
             // work_id
             $lists[$i]['work_id'] = $correction_work[$i]['work_id'];
             // 状態

@@ -10,13 +10,13 @@ class Correction_rest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'work_id',
+        'correction_work_id',
         'rest_start',
         'rest_finish',
     ];
 
-    public function work()
+    public function correction_work()
     {
-        return $this->belongsTo(Work::class);
+        return $this->belongsTo(Correction_work::class);
     }
 }

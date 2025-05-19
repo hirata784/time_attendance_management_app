@@ -39,10 +39,10 @@
                 <td data-label="申請日時">{{$list['application_date']}}</td>
                 @if(Auth::guard('admin')->check())
                 <!-- 管理者の場合：修正申請承認画面へ遷移する -->
-                <td data-label="詳細"><a class="link" href="/stamp_correction_request/approve/{{ $list['work_id'] }}">詳細</a></td>
+                <td data-label="詳細"><a class="link" href="/stamp_correction_request/approve/{{ $list['id'] }}">詳細</a></td>
                 @else
                 <!-- 一般ユーザーの場合：勤怠詳細画面へ遷移する -->
-                <td data-label="詳細"><a class="link" href="/attendance/{{ $list['work_id'] }}">詳細</a></td>
+                <td data-label="詳細"><a class="link" name="a" href="/attendance/{{ $list['id'] }}">詳細</a></td>
                 @endif
             </tr>
             @endforeach

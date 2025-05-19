@@ -15,7 +15,7 @@ class CreateCorrectionRestsTable extends Migration
     {
         Schema::create('correction_rests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('work_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('correction_work_id')->constrained()->cascadeOnDelete();
             $table->dateTime('rest_start');
             $table->dateTime('rest_finish')->nullable();
             $table->timestamps();

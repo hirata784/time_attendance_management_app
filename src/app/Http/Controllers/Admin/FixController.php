@@ -9,20 +9,38 @@ use App\Models\Work;
 use App\Models\User;
 use App\Models\Rest;
 use App\Models\Correction_work;
-use App\Models\Correction_rest;
 use Illuminate\Http\Request;
 
 class FixController extends Controller
 {
-    public function edit($work_id)
+    public function edit($id)
     {
-        // データ作成
-        $user_id = Work::find($work_id)->user_id;
-        $list = [];
-        // 承認ステータスを確認
-        $correction_work = Correction_work::where('work_id', $work_id)->get();
+        // どのページから遷移してきたかチェック
+        $url = $_SERVER['HTTP_REFERER'];
+
+        if (strpos($url, 'http://localhost/attendance') !== false or strpos($url, 'http://localhost/admin/attendance') !== false) {
+            // 勤怠一覧画面から
+            // データ作成(Worksのidを元に)
+            $user_id = Work::find($id)->user_id;
+            $work_id  = $id;
+            $list = [];
+            // Correction_workのデータを確認。昇順に並び替える
+            $correction_work = Correction_work::orderBy('created_at', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->where('work_id', $work_id)
+                ->get();
+        } elseif (strpos($url, 'http://localhost/stamp_correction_request') !== false) {
+            // 申請一覧画面から
+            // データ作成(Correction_worksのidを元に)
+            $user_id = Correction_work::find($id)->user_id;
+            $work_id = Correction_work::find($id)->work_id;
+            $list = [];
+            // Correction_workのデータを確認
+            $correction_work = Correction_work::where('id', $id)
+                ->get();
+        }
         // 休憩回数
-        $rest_count = Correction_rest::where('work_id', $work_id)->get();
+        $rest_count = Correction_work::find($correction_work[0]['id'])->correction_rests;
         // 名前
         $name = User::where('id', $user_id)->get();
         $list['name'] = $name[0]->name;

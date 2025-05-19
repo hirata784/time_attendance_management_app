@@ -28,4 +28,9 @@ class Correction_work extends Model
     {
         return $this->belongsTo(Work::class);
     }
+
+    public function correction_rests()
+    {
+        return $this->hasMany(Correction_rest::class);
+    }
 }
