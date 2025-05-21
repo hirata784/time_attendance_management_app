@@ -77,6 +77,17 @@ td {
     letter-spacing: 0.2rem;
 }
 
+.wait-txt {
+    width: 100px;
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 1.0rem;
+    text-align: center;
+    letter-spacing: 0.2rem;
+    border: none;
+    outline: none;
+}
+
 .correction-btn {
     text-align: right;
     margin-top: 100px;
@@ -92,6 +103,18 @@ td {
     font-size: 1.0rem;
 }
 
+.wait-txa {
+    width: 100%;
+    resize: none;
+    padding-left: 20px;
+    font-size: 1.0rem;
+    border: none;
+    outline: none;
+    height: 60px;
+    line-height: 60px;
+    overflow: hidden;
+}
+
 .btn {
     padding: 10px;
     width: 15%;
@@ -103,6 +126,11 @@ td {
     font-weight: bold;
     font-size: 1.5rem;
     text-align: center;
+}
+
+.str{
+    color: #f77879;
+    font-weight: bold;
 }
 
 .th-error {

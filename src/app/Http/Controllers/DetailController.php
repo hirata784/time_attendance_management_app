@@ -65,6 +65,15 @@ class DetailController extends Controller
                 }
                 // 備考
                 $list['remarks'] = $correction_work[0]['remarks'];
+                // 承認ステータス
+                $list['application_status'] = 1;
+                // 修正可否(0:NG 1:OK)
+                if (strpos($url, 'http://localhost/admin/attendance') !== false) {
+                    // 勤怠一覧画面(管理者)から 修正OK
+                    $list['change'] = 1;
+                } else {
+                    $list['change'] = 0;
+                }
                 // 休憩時間
                 for ($i = 0; $i < count($rest_count); $i++) {
                     $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');
@@ -103,6 +112,16 @@ class DetailController extends Controller
                     // 申請一覧画面から correction_workのremarks
                     $list['remarks'] = $correction_work[0]['remarks'];
                 }
+                // 承認ステータス
+                $list['application_status'] = 2;
+                // 修正可否(0:NG 1:OK)
+                if (strpos($url, 'http://localhost/stamp_correction_request/list') !== false) {
+                    // 申請一覧画面から 修正NG
+                    $list['change'] = 0;
+                } elseif (strpos($url, 'http://localhost/attendance') !== false or strpos($url, 'http://localhost/admin/attendance') !== false) {
+                    // 勤怠一覧画面から 修正OK
+                    $list['change'] = 1;
+                }
                 // 休憩時間
                 for ($i = 0; $i < count($rest_count); $i++) {
                     $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');
@@ -137,6 +156,10 @@ class DetailController extends Controller
             }
             // 備考
             $list['remarks'] = null;
+            // 承認ステータス
+            $list['application_status'] = null;
+            // 修正可否(0:NG 1:OK)
+            $list['change'] = 1;
             // 休憩時間
             for ($i = 0; $i < count($rest_count); $i++) {
                 $list['rest_start'][$i] = \Carbon\Carbon::parse($rest_count[$i]->rest_start)->format('H:i');

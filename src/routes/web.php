@@ -5,6 +5,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\DetailController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\VerifiedController;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\AdminListController;
 use App\Http\Controllers\admin\StaffController;
@@ -24,13 +25,16 @@ use GuzzleHttp\Psr7\Request;
 |
 */
 
-Route::middleware('auth')->group(function () {
+
+
+Route::group(['middleware' => 'auth', 'middleware' => 'verified'], function () {
     Route::get('/attendance', [AttendanceController::class, 'index']);
     Route::post('/attendance/store', [AttendanceController::class, 'store']);
     Route::post('/attendance/update_work', [AttendanceController::class, 'updateWork']);
     Route::post('/attendance/update_rest', [AttendanceController::class, 'updateRest']);
     Route::get('/attendance/list', [ListController::class, 'index']);
     Route::get('/attendance/list/month', [ListController::class, 'indexMonth']);
+    Route::get('/verified', [VerifiedController::class, 'index']);
 });
 
 Route::group(['prefix' => 'admin'], function () {
