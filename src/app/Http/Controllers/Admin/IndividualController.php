@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Work;
 use App\Models\Rest;
 use App\Models\User;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class IndividualController extends Controller
 {
@@ -79,6 +80,71 @@ class IndividualController extends Controller
             $lists = $this->list($works, $rests, $rest_minute);
         }
         return view('admin/individual', compact('lists', 'now_date', 'user_id', 'user_name'));
+    }
+
+    public function show($user_id, Request $request)
+    {
+        // データ作成
+        $now_date = $request->now_date;
+        $rests = [];
+        $rest_minute = 0;
+        $csvData = [];
+
+        // ヘッダー作成
+        $csvHeader = [
+            '日付',
+            '出勤',
+            '退勤',
+            '休憩',
+            '合計',
+        ];
+
+        // CSVデータ作成
+        // 出勤時間の年月と打刻したユーザーを検索
+        $works = Work::where('attendance_time', "LIKE", '%' . substr($now_date, 0, 7) . '%')
+            ->where('user_id', $user_id)->get();
+
+        foreach ($works as $work) {
+            // ログインユーザーの休憩情報取得
+            $rest = Rest::where('work_id', $work->id)->get();
+            array_push($rests, $rest);
+        }
+
+        if (count($works) == 0) {
+            // 該当データがない場合
+            $csvData = [];
+        } else {
+            $csvData = $this->list($works, $rests, $rest_minute);
+        }
+
+        // 余分データwork_idを削除する
+        for ($i = 0; $i < count($works); $i++) {
+            unset($csvData[$i]['work_id']);
+        }
+
+        // ファイル名：年月ユーザー名
+        $filename = \Carbon\Carbon::parse($request['now_date'])->format('Ym') . $request['user_name'] . '.csv';
+
+        $response = new StreamedResponse(function () use ($csvHeader, $csvData) {
+            $createCsvFile = fopen('php://output', 'w');
+
+            mb_convert_variables('SJIS-win', 'UTF-8', $csvHeader);
+            mb_convert_variables('SJIS-win', 'UTF-8', $csvData);
+
+            // ファイルにデータを書き込む
+            fputcsv($createCsvFile, $csvHeader);
+
+            foreach ($csvData as $csv) {
+                fputcsv($createCsvFile, $csv);
+            }
+
+            fclose($createCsvFile);
+        }, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=' . $filename,
+        ]);
+
+        return $response;
     }
 
     public function list($works, $rests, $rest_minute)

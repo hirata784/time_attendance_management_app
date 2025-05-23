@@ -48,6 +48,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/staff/list', [StaffController::class, 'index']);
         Route::get('/attendance/staff/{id}', [IndividualController::class, 'index']);
         Route::get('/attendance/staff/{id}/month', [IndividualController::class, 'indexMonth']);
+        Route::get('/attendance/staff/{id}/show', [IndividualController::class, 'show']);
     });
 });
 

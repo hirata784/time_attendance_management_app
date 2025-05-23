@@ -35,8 +35,10 @@
         </tr>
         @endforeach
     </table>
-    <div class="correction-btn">
+    <form class="correction-btn" action="/admin/attendance/staff/{{$user_id}}/show" method="get">
         <button class="btn">CSV出力</button>
-    </div>
+        <input type="hidden" name="user_name" value="{{$user_name}}">
+        <input type="hidden" name="now_date" value="{{$now_date}}">
+    </form>
 </div>
 @endsection
