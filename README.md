@@ -9,7 +9,7 @@ Dockerビルド
 
 ＊MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集して下さい。
 
-Laravel環境構築
+## Laravel環境構築
 1. docker-compose exec php bash
 2. composer install
 3. cp .env.example .env
@@ -40,7 +40,7 @@ php artisan db:seed
 php artisan storage:link
 ```
 
-単体テスト  
+## 単体テスト
 テスト用データベースの準備
 1. PHPコンテナ上にいる場合、「exit」で抜ける
 2. docker-compose exec mysql bash
@@ -72,6 +72,33 @@ DB_PASSWORD=root
 時間内にクリック出来なかった場合、認証画面の[認証メールを再送する]を  
 クリックして下さい。認証メールが再送されます.
 5. メール認証が完了し、プロフィール編集画面へ移動する
+
+## テストアカウント
+一般ユーザー  
+name: テスト一郎  
+email: ichiro@example.com  
+password: ichiichi  
+-------------------------
+一般ユーザー  
+name: テスト二郎  
+email: jiro@example.com  
+password: jirojiro  
+-------------------------
+一般ユーザー  
+name: テスト三郎  
+email: saburo@example.com  
+password: sabusabu  
+-------------------------
+管理者  
+name: テスト四郎  
+email: shiro@example.com  
+password: shiroshiro  
+-------------------------
+
+## CSVダウンロード
+スタッフ別勤怠一覧画面(管理者)より、CSV出力機能があります。  
+[CSV出力]をクリックすると、CSVファイルがダウンロードフォルダへ保存されます。  
+ファイル名は[(選択年月)(選択ユーザー名).csv]です。
 
 ## 使用技術
 - PHP 7.4.9

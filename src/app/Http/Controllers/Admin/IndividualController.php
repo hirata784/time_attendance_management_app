@@ -57,7 +57,6 @@ class IndividualController extends Controller
             // 前月を表示
             $now_date->subMonth(1);
         }
-
         if ($request->has('next-month')) {
             // 翌月を表示
             $now_date->addMonth(1);
@@ -72,7 +71,6 @@ class IndividualController extends Controller
             $rest = Rest::where('work_id', $work->id)->get();
             array_push($rests, $rest);
         }
-
         if (count($works) == 0) {
             // 該当データがない場合
             $lists = [];
@@ -116,12 +114,10 @@ class IndividualController extends Controller
         } else {
             $csvData = $this->list($works, $rests, $rest_minute);
         }
-
         // 余分データwork_idを削除する
         for ($i = 0; $i < count($works); $i++) {
             unset($csvData[$i]['work_id']);
         }
-
         // ファイル名：年月ユーザー名
         $filename = \Carbon\Carbon::parse($request['now_date'])->format('Ym') . $request['user_name'] . '.csv';
 
@@ -143,7 +139,6 @@ class IndividualController extends Controller
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=' . $filename,
         ]);
-
         return $response;
     }
 
@@ -158,8 +153,10 @@ class IndividualController extends Controller
             $lists[$i]['work_id'] = $work_id;
             $lists[$i]['date'] = \Carbon\Carbon::parse($attendance_time)->isoFormat('MM/DD(ddd)');
             $lists[$i]['attendance_time'] = \Carbon\Carbon::parse($attendance_time)->format('H:i');
-            // 休憩合計時間にnullを代入(未休憩対策)
+            $lists[$i]['leaving_time'] = null;
             $lists[$i]['rest_sum'] = null;
+            $lists[$i]['sum_time'] = null;
+
             for ($j = 0; $j < count($rests[$i]); $j++) {
                 // 休憩時間を追加(複数休憩の場合、1つに時間をまとめる)
                 // 休憩していない場合、処理しない
@@ -211,10 +208,6 @@ class IndividualController extends Controller
                 // 配列要素を追加
                 $lists[$i]['leaving_time'] = \Carbon\Carbon::parse($leaving_time)->format('H:i');
                 $lists[$i]['sum_time'] = $sum_time;
-            } else {
-                // 退勤していない場合、空白を追加
-                $lists[$i]['leaving_time'] = null;
-                $lists[$i]['sum_time'] = null;
             }
             $rest_minute = 0;
         }

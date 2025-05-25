@@ -13,18 +13,20 @@ class RequestController extends Controller
     public function index()
     {
         // データ作成
-        $data = null;
+        $data = "wait";
         if (Auth::guard('admin')->check()) {
             // 管理者のログイン場合：全ての一般ユーザーを表示
             $user = User::all();
-            // 全一般ユーザーを抽出
-            $correction_work = Correction_work::all();
+            // 全一般ユーザーかつ承認待ちを抽出
+            $correction_work = Correction_work::where('application_status', 1)
+                ->get();
         } else {
             // 一般ログインの場合：ログイン中のユーザーのみ表示
             $user_id = Auth::id();
             $user = User::where('id', $user_id)->get();
-            // ログインユーザーを抽出
+            // ログインユーザーかつ承認待ちを抽出
             $correction_work = Correction_work::where('user_id', $user_id)
+                ->where('application_status', 1)
                 ->get();
         }
         if (count($correction_work) == 0) {
