@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
@@ -16,7 +16,7 @@ class RegisterTest extends TestCase
      * @return void
      */
 
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     // 1.認証機能(一般ユーザー)
     public function test_会員登録_名前未入力()
