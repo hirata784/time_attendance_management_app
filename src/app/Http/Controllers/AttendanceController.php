@@ -94,7 +94,10 @@ class AttendanceController extends Controller
     {
         // データ作成
         $user_id = Auth::id();
-        $now = Carbon::now();
+        // 日付：Carbon 時間：画面表示を組み合わせて現在日時を作成
+        $now_date = substr(Carbon::now(), 0, 10);
+        $now_time = $request['now_time'];
+        $now = $now_date . ' ' . $now_time;
 
         // 退勤処理
         if ($request->has('work')) {
@@ -132,7 +135,11 @@ class AttendanceController extends Controller
     public function updateRest(Request $request)
     {
         // データ作成
-        $now = Carbon::now();
+        $now_date = substr(Carbon::now(), 0, 10);
+        // 日付：Carbon 時間：画面表示を組み合わせて現在日時を作成
+        $now_date = substr(Carbon::now(), 0, 10);
+        $now_time = $request['now_time'];
+        $now = $now_date . ' ' . $now_time;
         $rest_finish = substr($now, 0, 16) . ":00";
 
         // work_id:ログインユーザーidかつ今日日付の出勤時間

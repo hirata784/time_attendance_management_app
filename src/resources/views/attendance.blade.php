@@ -38,6 +38,8 @@
             <button name="work" class="btn-black">退勤</button>
             <button name="rest" class="btn-white">休憩入</button>
         </div>
+        <!-- コントローラーに時間のみ渡す -->
+        <input type="hidden" name="now_time" value="{{$now_time}}">
     </form>
     @elseif($work_status == "3")
     <form class="attendance-form" action="/attendance/update_rest" method="post">
@@ -54,6 +56,8 @@
         <div>
             <button class="btn-white">休憩戻</button>
         </div>
+        <!-- コントローラーに時間のみ渡す -->
+        <input type="hidden" name="now_time" value="{{$now_time}}">
     </form>
     @elseif($work_status == "4")
     <div class="work-status">
