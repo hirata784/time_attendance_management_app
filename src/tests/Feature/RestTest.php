@@ -46,7 +46,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 休憩入ボタンの表示を確認
-        $response->assertSee('休憩入');
+        $response->assertSee('<button name="rest" class="btn-white">休憩入</button>', $escaped = false);
         // 休憩入ボタンを押下
         $response = $this->post('/attendance/update_work', ['rest' => '']);
         $response->assertStatus(302);
@@ -87,7 +87,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 休憩入ボタンの表示を確認
-        $response->assertSee('休憩入');
+        $response->assertSee('<button name="rest" class="btn-white">休憩入</button>', $escaped = false);
         // 休憩入ボタンを押下
         $response = $this->post('/attendance/update_work', ['rest' => '']);
         $response->assertStatus(302);
@@ -101,7 +101,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('休憩中');
         // 休憩戻ボタンの表示を確認
-        $response->assertSee('休憩戻');
+        $response->assertSee('<button class="btn-white">休憩戻</button>', $escaped = false);
         // 休憩戻ボタンを押下
         $response = $this->post('/attendance/update_rest');
         $response->assertStatus(302);
@@ -112,7 +112,7 @@ class RestTest extends TestCase
         $response->assertStatus(200);
 
         // 画面に表示されているボタンを確認
-        $response->assertSee('休憩入');
+        $response->assertSee('<button name="rest" class="btn-white">休憩入</button>', $escaped = false);
     }
 
     public function test_勤怠登録_休憩戻ボタン機能()
@@ -142,7 +142,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 休憩入ボタンの表示を確認
-        $response->assertSee('休憩入');
+        $response->assertSee('<button name="rest" class="btn-white">休憩入</button>', $escaped = false);
         // 休憩入ボタンを押下
         $response = $this->post('/attendance/update_work', ['rest' => '']);
         $response->assertStatus(302);
@@ -156,7 +156,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('休憩中');
         // 休憩戻ボタンの表示を確認
-        $response->assertSee('休憩戻');
+        $response->assertSee('<button class="btn-white">休憩戻</button>', $escaped = false);
         // 休憩戻ボタンを押下
         $response = $this->post('/attendance/update_rest');
         $response->assertStatus(302);
@@ -197,7 +197,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 休憩入ボタンの表示を確認
-        $response->assertSee('休憩入');
+        $response->assertSee('<button name="rest" class="btn-white">休憩入</button>', $escaped = false);
         // 休憩入ボタンを押下
         $response = $this->post('/attendance/update_work', ['rest' => '']);
         $response->assertStatus(302);
@@ -211,7 +211,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('休憩中');
         // 休憩戻ボタンの表示を確認
-        $response->assertSee('休憩戻');
+        $response->assertSee('<button class="btn-white">休憩戻</button>', $escaped = false);
         // 休憩戻ボタンを押下
         $response = $this->post('/attendance/update_rest');
         $response->assertStatus(302);
@@ -225,7 +225,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 休憩入ボタンの表示を確認
-        $response->assertSee('休憩入');
+        $response->assertSee('<button name="rest" class="btn-white">休憩入</button>', $escaped = false);
         // 休憩入ボタンを押下
         $response = $this->post('/attendance/update_work', ['rest' => '']);
         $response->assertStatus(302);
@@ -236,7 +236,7 @@ class RestTest extends TestCase
         $response->assertStatus(200);
 
         // 休憩戻ボタンの表示を確認
-        $response->assertSee('休憩戻');
+        $response->assertSee('<button class="btn-white">休憩戻</button>', $escaped = false);
     }
 
     public function test_勤怠登録_休憩時刻確認()
@@ -270,7 +270,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 休憩入ボタンの表示を確認
-        $response->assertSee('休憩入');
+        $response->assertSee('<button name="rest" class="btn-white">休憩入</button>', $escaped = false);
         // 休憩入ボタンを押下
         $response = $this->post('/attendance/update_work', ['rest' => '', 'now_time' => $rest_start]);
         $response->assertStatus(302);
@@ -284,7 +284,7 @@ class RestTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('休憩中');
         // 休憩戻ボタンの表示を確認
-        $response->assertSee('休憩戻');
+        $response->assertSee('<button class="btn-white">休憩戻</button>', $escaped = false);
         // 休憩戻ボタンを押下
         $response = $this->post('/attendance/update_rest', ['now_time' => $rest_finish]);
         $response->assertStatus(302);
@@ -299,6 +299,5 @@ class RestTest extends TestCase
         $rest_sum = $rest_finish->diffInMinutes($rest_start);
         // 休憩の合計時間表示を確認
         $response->assertSee($rest_sum);
-        $response->dd();
     }
 }

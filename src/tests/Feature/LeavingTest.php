@@ -23,7 +23,6 @@ class LeavingTest extends TestCase
     {
         // 出勤日時を取得
         $attendance_time = Carbon::now();
-        // 退勤時間を取得(出勤時間の30分後に設定)
         // テスト用ユーザーを作成
         $user = User::factory()->create();
         // 出勤中ステータスが表示されるデータ作成
@@ -47,7 +46,7 @@ class LeavingTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 退勤ボタンの表示を確認
-        $response->assertSee('退勤');
+        $response->assertSee('<button name="work" class="btn-black">退勤</button>', $escaped = false);
         // 退勤ボタンを押下するため、workキーを持たせる
         $response = $this->post('/attendance/update_work', ['work' => '']);
         $response->assertStatus(302);
@@ -78,7 +77,7 @@ class LeavingTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('勤務外');
         // 出勤ボタンの表示を確認
-        $response->assertSee('出勤');
+        $response->assertSee('<button class="btn-black">出勤</button>', $escaped = false);
         // 退勤ボタンを押下するため、workキーを持たせる
         $response = $this->post('/attendance/store');
         $response->assertStatus(302);
@@ -92,7 +91,7 @@ class LeavingTest extends TestCase
         // 画面に表示されているステータスを確認
         $response->assertSee('出勤中');
         // 退勤ボタンの表示を確認
-        $response->assertSee('退勤');
+        $response->assertSee('<button name="work" class="btn-black">退勤</button>', $escaped = false);
         // 退勤ボタンを押下するため、workキーを持たせる
         $response = $this->post('/attendance/update_work', ['work' => '', 'now_time' => $leaving_time]);
         $response->assertStatus(302);

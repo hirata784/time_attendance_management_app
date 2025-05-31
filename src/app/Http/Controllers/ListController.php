@@ -44,18 +44,16 @@ class ListController extends Controller
         // データ作成
         $works = Work::all();
         $user_id = Auth::id();
-        $now_date = new Carbon($request->now_date);
+        $now_date = new Carbon($request['now_date']);
         $rests = [];
         $rest_sum = [];
         $rest_minute = 0;
         $lists = [];
 
-
         if ($request->has('last-month')) {
             // 前月を表示
             $now_date->subMonth(1);
         }
-
         if ($request->has('next-month')) {
             // 翌月を表示
             $now_date->addMonth(1);
@@ -64,7 +62,7 @@ class ListController extends Controller
         // 出勤時間の年月と打刻したユーザーを検索
         $works = Work::where('attendance_time', "LIKE", '%' . substr($now_date, 0, 7) . '%')
             ->where('user_id', $user_id)->get();
-
+            
         foreach ($works as $work) {
             // ログインユーザーの休憩情報取得
             $rest = Rest::where('work_id', $work->id)->get();
