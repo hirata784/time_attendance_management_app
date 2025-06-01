@@ -62,7 +62,7 @@ class ListController extends Controller
         // 出勤時間の年月と打刻したユーザーを検索
         $works = Work::where('attendance_time', "LIKE", '%' . substr($now_date, 0, 7) . '%')
             ->where('user_id', $user_id)->get();
-            
+
         foreach ($works as $work) {
             // ログインユーザーの休憩情報取得
             $rest = Rest::where('work_id', $work->id)->get();
