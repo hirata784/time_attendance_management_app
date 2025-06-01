@@ -363,6 +363,7 @@ class ListTest extends TestCase
         $rest_finish = \Carbon\Carbon::parse($rest_finish)->Format('H:i');
 
         // 勤怠情報表示確認
+        $response->assertSee($this->user['name']); //名前
         $response->assertSee($year);
         $response->assertSee($month_day);
         $response->assertSee($attendance_time);

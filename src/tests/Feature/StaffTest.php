@@ -414,6 +414,7 @@ class StaffTest extends TestCase
         $rest['rest_finish'] = \Carbon\Carbon::parse($rest['rest_finish'])->Format('H:i');
 
         // 勤怠情報表示確認
+        $response->assertSee($user['name']); //名前
         $response->assertSee($year); //年
         $response->assertSee($month_day); //月日
         $response->assertSee($work['attendance_time']); //出勤

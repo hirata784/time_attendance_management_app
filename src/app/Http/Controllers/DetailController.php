@@ -217,7 +217,7 @@ class DetailController extends Controller
         // 休憩開始・終了時間
         $rests = $request->only(['rest_start', 'rest_finish']);
         // 休憩回数
-        $rest_count = count($rests['rest_start']);
+        $rest_count = $request['rest_count'];
 
         for ($i = 0; $i < $rest_count; $i++) {
             // 追加分の休憩開始が空白の場合、処理しない
