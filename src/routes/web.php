@@ -11,8 +11,6 @@ use App\Http\Controllers\admin\AdminListController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\admin\IndividualController;
 use App\Http\Controllers\admin\FixController;
-use GuzzleHttp\Psr7\Request;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +22,6 @@ use GuzzleHttp\Psr7\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
 
 Route::group(['middleware' => 'auth', 'middleware' => 'verified'], function () {
     Route::get('/attendance', [AttendanceController::class, 'index']);

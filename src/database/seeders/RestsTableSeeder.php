@@ -14,44 +14,22 @@ class RestsTableSeeder extends Seeder
      */
     public function run()
     {
-        // 3月
+        // 4月
         for ($i = 1; $i <= 30; $i++) {
             $param = [
-                'work_id' => ($i * 3) - 2,
-                'rest_start' => '2025-03-0' . $i . '  12:00:00',
-                'rest_finish' => '2025-03-0' . $i . '  13:00:00',
+                'work_id' => (($i * 3) - 2),
+                'rest_start' => '2025-04-0' . $i . '  12:00:00',
+                'rest_finish' => '2025-04-0' . $i . '  13:00:00',
             ];
             DB::table('rests')->insert($param);
             $param = [
-                'work_id' => ($i * 3) - 1,
-                'rest_start' => '2025-03-0' . $i . '  12:00:00',
-                'rest_finish' => '2025-03-0' . $i . '  13:00:00',
+                'work_id' => (($i * 3) - 1),
+                'rest_start' => '2025-04-0' . $i . '  12:00:00',
+                'rest_finish' => '2025-04-0' . $i . '  13:00:00',
             ];
             DB::table('rests')->insert($param);
             $param = [
                 'work_id' => ($i * 3),
-                'rest_start' => '2025-03-0' . $i . '  12:00:00',
-                'rest_finish' => '2025-03-0' . $i . '  13:00:00',
-            ];
-            DB::table('rests')->insert($param);
-        }
-
-        // 4月
-        for ($i = 1; $i <= 30; $i++) {
-            $param = [
-                'work_id' => (($i * 3) - 2) + 90,
-                'rest_start' => '2025-04-0' . $i . '  12:00:00',
-                'rest_finish' => '2025-04-0' . $i . '  13:00:00',
-            ];
-            DB::table('rests')->insert($param);
-            $param = [
-                'work_id' => (($i * 3) - 1) + 90,
-                'rest_start' => '2025-04-0' . $i . '  12:00:00',
-                'rest_finish' => '2025-04-0' . $i . '  13:00:00',
-            ];
-            DB::table('rests')->insert($param);
-            $param = [
-                'work_id' => ($i * 3) + 90,
                 'rest_start' => '2025-04-0' . $i . '  12:00:00',
                 'rest_finish' => '2025-04-0' . $i . '  13:00:00',
             ];
@@ -59,21 +37,21 @@ class RestsTableSeeder extends Seeder
         }
 
         // 5月
-        for ($i = 1; $i <= 30; $i++) {
+        for ($i = 1; $i <= 31; $i++) {
             $param = [
-                'work_id' => (($i * 3) - 2) + 180,
+                'work_id' => (($i * 3) - 2) + 90,
                 'rest_start' => '2025-05-0' . $i . '  12:00:00',
                 'rest_finish' => '2025-05-0' . $i . '  13:00:00',
             ];
             DB::table('rests')->insert($param);
             $param = [
-                'work_id' => (($i * 3) - 1) + 180,
+                'work_id' => (($i * 3) - 1) + 90,
                 'rest_start' => '2025-05-0' . $i . '  12:00:00',
                 'rest_finish' => '2025-05-0' . $i . '  13:00:00',
             ];
             DB::table('rests')->insert($param);
             $param = [
-                'work_id' => ($i * 3) + 180,
+                'work_id' => ($i * 3) + 90,
                 'rest_start' => '2025-05-0' . $i . '  12:00:00',
                 'rest_finish' => '2025-05-0' . $i . '  13:00:00',
             ];
