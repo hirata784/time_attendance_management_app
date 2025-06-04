@@ -6,8 +6,6 @@ use App\Models\User;
 use App\Models\Correction_work;
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Http\Request;
-
 class RequestController extends Controller
 {
     public function index()
