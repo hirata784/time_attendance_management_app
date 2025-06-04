@@ -171,6 +171,12 @@ class DetailController extends Controller
                 }
             }
         }
+        // 管理者詳細の場合、承認まちメッセージは取り消す
+    if (strpos($url, 'http://localhost/admin/attendance') !== false) {
+            // 修正可否(0:NG 1:OK)
+            $list['change'] = 1;
+        }
+
         return view('detail', compact('work_id', 'list', 'rest_count'));
     }
 
