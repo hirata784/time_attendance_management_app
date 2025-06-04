@@ -81,7 +81,7 @@ class AttendanceTest extends TestCase
     public function test_勤怠登録_出勤時刻記録()
     {
         // 出勤日時を取得
-        $now_date = Carbon::now()->isoFormat('M/D(ddd)'); //日付
+        $now_date = Carbon::now()->isoFormat('MM/DD(ddd)'); //日付
         $now_time = Carbon::now()->format('H:i'); //時間
         // テスト用ユーザーを作成
         $user = User::factory()->create();
