@@ -2,16 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Http\Requests\RegisterRequest;
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
-use Spinen\MailAssertions\MailTracking;
 use Tests\TestCase;
-
-
-
 
 class EmailTest extends TestCase
 {
@@ -22,8 +15,6 @@ class EmailTest extends TestCase
      */
 
     use DatabaseMigrations;
-
-
 
     // 16.メール認証機能
     public function test_メール認証誘導_メール認証サイト表示()
