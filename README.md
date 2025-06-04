@@ -41,14 +41,14 @@ php artisan storage:link
 
 ## 単体テスト
 テスト用データベースの準備
-1. PHPコンテナ上にいる場合、「exit」で抜ける
+1. PHPコンテナ上にいる場合、「exit」でtime_attendance_management_appまで戻る
 2. docker-compose exec mysql bash
 3. mysql -u root -p
 4. パスワードを求められるので「root」と入力しEnter
 5. CREATE DATABASE demo_test;
 
 テスト用の.envファイルの作成
-1. MySQLコンテナ上にいる場合、「exit」で抜ける
+1. MySQLコンテナ上にいる場合、「exit」でtime_attendance_management_appまで戻る
 2. docker-compose exec php bash
 3. cp .env .env.testing
 4. .env.testingの環境変数を変更する
@@ -65,20 +65,19 @@ DB_PASSWORD=root
 
 メール認証の仕方
 1. 会員登録画面より会員登録後、メール認証画面へ移動する
-2. [認証はこちらから]を押下し、mailhogを開く
-    ※下記URL欄のmailhogから、mailhogを直接開いても良いです
+2. [認証はこちらから]を押下し、mailhogを開く  
+    ※下記URL欄のmailhogから、mailhogを直接開くことも出来ます
 3. 登録したメールアドレスが記載されている本文をクリックする
 4. [Verify Email Address]をクリックする  
 時間内にクリック出来なかった場合、認証画面の[認証メールを再送する]を  
 クリックして下さい。認証メールが再送されます。
-5. メール認証が完了し、プロフィール編集画面へ移動する
+5. メール認証が完了し、勤怠登録画面へ移動する
 
 ## ダミーデータ
 1. ユーザー情報  
 下記テストアカウントが作成されます
 2. 勤怠記録情報  
-一般ユーザーの出勤・退勤・休憩時間が作成されます。  
-期間は2025年4月と2025年5月の2ヶ月分です。  
+一般ユーザーの出勤・退勤・休憩時間が2025年4月と2025年5月の2ヶ月分作成されます。  
 承認待ち・承認済み状態のデータはありません。
 
 

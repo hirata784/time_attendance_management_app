@@ -7,7 +7,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
+use Spinen\MailAssertions\MailTracking;
 use Tests\TestCase;
+
+
+
 
 class EmailTest extends TestCase
 {
@@ -19,6 +23,8 @@ class EmailTest extends TestCase
 
     use DatabaseMigrations;
 
+
+
     // 16.メール認証機能
     public function test_メール認証誘導_メール認証サイト表示()
     {
@@ -29,9 +35,17 @@ class EmailTest extends TestCase
             'password' => "password",
             'password_confirmation' => "password",
         ]);
-
         // メール認証誘導画面へ移動
         $response = $this->get('/email/verify');
         $response->assertStatus(200);
+
+        //client
+        $client = new Client;
+        //認証はこちらからを押下
+        $url = "http://host.docker.internal:8025/";
+        $response = $client->get($url);
+        //メール認証サイトを表示
+        $obj = json_decode($response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }
